@@ -1,8 +1,6 @@
 package com.cloud.drive.controller;
 
-import com.cloud.drive.dto.ImageDto;
 import com.cloud.drive.entity.Image;
-import com.cloud.drive.entity.User;
 import com.cloud.drive.service.interfaces.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +22,11 @@ public class FileController {
     @PostMapping("/upload")
     public Image uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("userId") Long id) throws IOException {
         return fileStorageService.save(file, id);
+    }
+
+    @PostMapping("/savePhoto")
+    public Long uploadPhoto(@RequestParam("photo") MultipartFile file) throws IOException {
+        return fileStorageService.save(file);
     }
 
     @GetMapping("/getImage")

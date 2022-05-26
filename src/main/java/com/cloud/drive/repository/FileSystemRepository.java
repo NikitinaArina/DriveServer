@@ -3,6 +3,7 @@ package com.cloud.drive.repository;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -22,24 +23,13 @@ public class FileSystemRepository {
         }
     }
 
-    public String save(Long id, byte[] content, String fileName) throws IOException {
-        String userFolder = createDirectoryToUser(id);
-
-        Path newFile = Paths.get(userFolder + fileName);
-        Files.createDirectories(newFile.getParent());
-
-        Files.write(newFile, content);
-
-        return newFile.toAbsolutePath()
-                .toString();
-    }
-
-    private String createDirectoryToUser(Long id) throws IOException {
+    public String createDirectoryToUser(Long id) {
         Path path = Path.of(userPath + id.toString() + "/");
 
         if (!Files.exists(path)) {
-            Path directory = Files.createDirectory(Paths.get(RESOURCE_DIR));
-            return directory.toAbsolutePath().toString();
+            File dir = new File(path.toUri());
+            dir.mkdir();
+            return dir.getAbsolutePath();
         } else return Path.of(userPath + id.toString() + "/").toAbsolutePath().toString();
     }
 }

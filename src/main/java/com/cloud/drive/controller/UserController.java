@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.AuthenticationException;
+import javax.security.auth.login.AccountNotFoundException;
 import java.util.Arrays;
 
 @RestController
@@ -26,6 +27,13 @@ public class UserController {
         User userDB = new User(user.getUsername(), encodedPassword.toCharArray());
 
         return userService.createUser(userDB);
+    }
+
+    @PutMapping("/update")
+    public User updateUser(@RequestBody User user) throws AccountNotFoundException {
+        String encodedPassword = userService.encodePassword(Arrays.toString(user.getPassword()));
+        user.setPassword(encodedPassword.toCharArray());
+        return userService.updateUser(user);
     }
 
     @PostMapping("/login")
